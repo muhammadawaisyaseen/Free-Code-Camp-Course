@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:freecodecampcourse/screens/home_screen.dart';
+import 'package:freecodecampcourse/screens/login_screen.dart';
+import 'package:freecodecampcourse/screens/register_screen.dart';
 
-// import 'firebase_options.dart';
-void main() async {
-
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: FirebaseOptions(
-  //     apiKey: "Api key here",
-  //     appId: "App id here",
-  //     messagingSenderId: "Messaging sender id here",
-  //     projectId: "project id here",
-  //   ),
-  // );
-
   runApp(const MyApp());
 }
 
@@ -30,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: LoginView(),
     );
   }
 }

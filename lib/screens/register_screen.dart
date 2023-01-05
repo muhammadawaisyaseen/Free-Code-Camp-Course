@@ -5,14 +5,14 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freecodecampcourse/firebase_options.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({super.key});
+class RegisterView extends StatefulWidget {
+  RegisterView({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                             .createUserWithEmailAndPassword(
                                 email: email, password: password);
                         print(userCredential);
-                        print('Awais Yaseen');
+                        // print('Awais Yaseen');
                       },
                       child: Text('Register'),
                     )
