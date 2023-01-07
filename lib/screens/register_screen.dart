@@ -31,7 +31,9 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register'),),
+      appBar: AppBar(
+        title: Text('Register'),
+      ),
       body: Column(
         children: [
           TextField(
@@ -70,7 +72,20 @@ class _RegisterViewState extends State<RegisterView> {
               }
             },
             child: const Text('Register'),
-          )
+          ),
+          TextButton(
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login/', (route) => false);
+                // Navigator.push(context, MaterialPageRoute(
+                //   builder: (context) {
+                //     return RegisterView();
+                //   },
+                // ));
+                // Navigator.of(context)
+                //     .pushNamedAndRemoveUntil('/register/', (route) => false);
+              },
+              child: const Text('Already Registered? Login here'))
         ],
       ),
     );
