@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-class EmailVerificationView extends StatefulWidget {
-  const EmailVerificationView({super.key});
+// class EmailVerificationView extends StatefulWidget {
+//   const EmailVerificationView({super.key});
 
-  @override
-  State<EmailVerificationView> createState() => _EmailVerificationViewState();
-}
+//   @override
+//   State<EmailVerificationView> createState() => _EmailVerificationViewState();
+// }
 
-class _EmailVerificationViewState extends State<EmailVerificationView> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('Malik Awais'),
-    );
-  }
-}
+// class _EmailVerificationViewState extends State<EmailVerificationView> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Verify page'),),
+//       body: Column(
+//         children: const[
+//           Text('Malik Awais'),
+//         ],
+//       ),
+//     );
+//   }
+// }
