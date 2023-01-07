@@ -25,11 +25,12 @@ class HomePage extends StatelessWidget {
               if (user?.emailVerified ?? false) {
                 print('You are a verified user');
               } else {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EmailVerificationView(),
-                    ));
+                return EmailVerificationView();
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => EmailVerificationView(),
+                //     ));
               }
               return Text('Done');
             default:
