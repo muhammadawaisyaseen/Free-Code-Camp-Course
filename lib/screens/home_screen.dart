@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:freecodecampcourse/firebase_options.dart';
-import 'package:freecodecampcourse/screens/verify_email_view.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:flutter/material.dart';
+// import 'package:freecodecampcourse/firebase_options.dart';
+// import 'package:freecodecampcourse/screens/verify_email_view.dart';
 
 // class HomePage extends StatelessWidget {
 //   const HomePage({super.key});
