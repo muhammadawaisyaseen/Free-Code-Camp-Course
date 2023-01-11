@@ -7,6 +7,7 @@ import 'package:freecodecampcourse/screens/login_screen.dart';
 import 'package:freecodecampcourse/screens/register_screen.dart';
 import 'package:freecodecampcourse/screens/verify_email_view.dart';
 
+import 'constants/routes.dart';
 import 'firebase_options.dart';
 import 'dart:developer' as devtools show log;
 
@@ -22,23 +23,37 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    print('My App Init');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: const HomePage(),
       routes: {
-        '/login/': (context) => LoginView(),
-        '/register/': (context) => RegisterView(),
+        loginRoute: (context) => LoginView(),
+        registerRoute: (context) => RegisterView(),
+        notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const EmailVerificationView()
       },
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    print('Home Init');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +62,7 @@ class HomePage extends StatelessWidget {
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
+        print('Home Future Build');
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
@@ -59,7 +75,6 @@ class HomePage extends StatelessWidget {
             } else {
               return LoginView();
             }
-          // return const Text('Done');
 
           default:
             return const CircularProgressIndicator();
@@ -83,7 +98,7 @@ class _NotesViewState extends State<NotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main UI'),
+        title: const Text('Main UI'),
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
@@ -93,19 +108,19 @@ class _NotesViewState extends State<NotesView> {
                   if (shouldLogout) {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/login/', (_) => false);
+                        .pushNamedAndRemoveUntil(loginRoute, (_) => false);
                   } else {
-                    // return
-                    print(shouldLogout.toString());
+                    return;
                   }
-                  // devtools.log(shouldLogout.toString());
                   break;
               }
             },
             itemBuilder: (context) {
               return const [
                 PopupMenuItem<MenuAction>(
-                    value: MenuAction.logout, child: Text('Logout')),
+                  value: MenuAction.logout,
+                  child: Text('Logout'),
+                ),
               ];
             },
           )

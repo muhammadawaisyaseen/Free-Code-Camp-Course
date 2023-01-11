@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:freecodecampcourse/screens/register_screen.dart';
+import 'dart:developer' as devtools show log;
+
+import 'package:freecodecampcourse/constants/routes.dart';
+
+import '../widgets/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({super.key});
@@ -32,7 +36,9 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login'),),
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       body: Column(
         children: [
           TextField(
@@ -47,40 +53,53 @@ class _LoginViewState extends State<LoginView> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: const InputDecoration(hintText: 'Enter Your Email'),
+            decoration: const InputDecoration(hintText: 'Enter Password here'),
           ),
           TextButton(
             onPressed: () async {
               try {
                 final email = _email.text;
                 final password = _password.text;
-    
-                final userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(email: email, password: password);
-                print('HO GYA LOGIN BAI');
-                // malikmananyaseen@gmail.com
-                print(userCredential);
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  notesRoute,
+                  (_) => false,
+                );
               } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found')
-                  print('User Not Found');
-                else if (e.code == 'wrong-password') {
-                  print('Wrong Password');
+                if (e.code == 'user-not-found') {
+                  await showErrorDialog(
+                    context,
+                    'User Not Found',
+                  );
+                } else if (e.code == 'wrong-password') {
+                  await showErrorDialog(
+                    context,
+                    'wrong cridential',
+                  );
+                } else {
+                  await showErrorDialog(
+                    context,
+                    'Error: ${e.code}',
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
               }
             },
-            child: Text('Login'),
+            child: const Text('Login'),
           ),
           TextButton(
               onPressed: () {
-                // Navigator.push(context, MaterialPageRoute(
-                //   builder: (context) {
-                //     return RegisterView();
-                //   },
-                // ));
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/register/', (route) => false);
+                    .pushNamedAndRemoveUntil(registerRoute, (route) => false);
               },
-              child: Text('Not registered yet? Registered here'))
+              child: const Text('Not registered yet? Registered here'))
         ],
       ),
     );
