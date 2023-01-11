@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
               if (user.emailVerified) {
+                // NotesView is not showing after verifying
                 return NotesView();
               } else {
                 return const EmailVerificationView();
