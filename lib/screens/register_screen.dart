@@ -52,7 +52,7 @@ class _RegisterViewState extends State<RegisterView> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: const InputDecoration(hintText: 'Enter Your Email'),
+            decoration: const InputDecoration(hintText: 'Enter Your Password'),
           ),
           TextButton(
             onPressed: () async {
