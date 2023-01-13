@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/constants/routes.dart';
+import 'package:freecodecampcourse/services/auth/auth_service.dart';
 
 class EmailVerificationView extends StatefulWidget {
   const EmailVerificationView({super.key});
@@ -22,13 +22,12 @@ class _EmailVerificationViewState extends State<EmailVerificationView> {
           const Text("If you've not yet, press below button\n"),
           TextButton(
               onPressed: (() async {
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
+                await AuthService.firebase().sendEmailVerification();
               }),
               child: const Text('Send email verification')),
           TextButton(
               onPressed: (() async {
-                await FirebaseAuth.instance.signOut();
+                await AuthService.firebase().logOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   registerRoute,
                   (route) => false,

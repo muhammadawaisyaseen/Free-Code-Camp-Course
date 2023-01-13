@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer' as devtools show log;
-
 import 'package:freecodecampcourse/constants/routes.dart';
-
-import '../widgets/show_error_dialog.dart';
+import 'package:freecodecampcourse/services/auth/auth_exceptions.dart';
+import 'package:freecodecampcourse/services/auth/auth_service.dart';
+import 'package:freecodecampcourse/widgets/show_error_dialog.dart';
+// import '../widgets/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({super.key});
@@ -60,47 +60,60 @@ class _LoginViewState extends State<LoginView> {
               try {
                 final email = _email.text;
                 final password = _password.text;
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
-                final user = FirebaseAuth.instance.currentUser;
-                // If user verified take true otherwise use false in condition
-                if (user?.emailVerified ?? false) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (_) => false,
-                );
-                }else{
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                  verifyEmailRoute,
-                  (_) => false,
-                );
-                }
+                await AuthService.firebase().login(email: email, password: password,);
                 
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
-                  await showErrorDialog(
+                final user = AuthService.firebase().currentUser;
+                // If user verified take true otherwise use false in condition
+                if (user?.isEmailVerified ?? false) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (_) => false,
+                  );
+                } else {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (_) => false,
+                  );
+                }
+              } on UserNotFoundAuthException{
+                await showErrorDialog(
                     context,
                     'User Not Found',
                   );
-                } else if (e.code == 'wrong-password') {
-                  await showErrorDialog(
+              }on WrongPasswordAuthException{
+                await showErrorDialog(
                     context,
                     'wrong cridential',
                   );
-                } else {
-                  await showErrorDialog(
-                    context,
-                    'Error: ${e.code}',
-                  );
-                }
-              } catch (e) {
+              } on GenericAuthException{
                 await showErrorDialog(
-                  context,
-                  e.toString(),
-                );
+                    context,
+                    'Authentication error',
+                  );
               }
+              //  {
+              //   if (e.code == 'user-not-found') {
+              //     await showErrorDialog(
+              //       context,
+              //       'User Not Found',
+              //     );
+              //   } else if (e.code == 'wrong-password') {
+              //     await showErrorDialog(
+              //       context,
+              //       'wrong cridential',
+              //     );
+              //   } else {
+              //     await showErrorDialog(
+              //       context,
+              //       'Error: ${e.code}',
+              //     );
+              //   }
+              // } catch (e) {
+              //   await showErrorDialog(
+              //     context,
+              //     e.toString(),
+              //   );
+              // }
             },
             child: const Text('Login'),
           ),
