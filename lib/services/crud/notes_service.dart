@@ -6,19 +6,25 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' show join;
 
-// NotesService will talk with Database directly
+// NotesService class will talk with Database directly
 class NotesService {
   Database? _db;
 
-// Making NotesService Singleton
-  // static final NotesService _shared = NotesService._shared;
-  // NotesService._sharedInstance();
-  // factory NotesService() => _shared;
+List<DatabaseNote> _notes = [];
 
-  List<DatabaseNote> _notes = [];
-  final _notesStreamController = StreamController<
-      List<
-          DatabaseNote>>.broadcast(); // stream Controller contains list of DatabaseNote
+// Making NotesService Singleton
+  static final NotesService _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
+  factory NotesService() => _shared;
+  
+// stream Controller contains list of DatabaseNote
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   // Grab all the notes from _notesStreamController, store in allNotes and our ui will listen to this and display the notes on notes_view
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
