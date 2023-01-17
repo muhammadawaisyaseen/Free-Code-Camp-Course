@@ -10,9 +10,10 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
-  static final NotesService _shared = NotesService._shared;
-  NotesService._sharedInstance();
-  
+// Making NotesService Singleton
+  // static final NotesService _shared = NotesService._shared;
+  // NotesService._sharedInstance();
+  // factory NotesService() => _shared;
 
   List<DatabaseNote> _notes = [];
   final _notesStreamController = StreamController<
@@ -159,7 +160,6 @@ class NotesService {
   // Get user from db
   Future<DatabaseUser> getUser({required String email}) async {
     print('GET USER FUNCTION');
-    // print("MALIK AWAIS YASEEN NARANG MANDI");
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final results = await db.query(

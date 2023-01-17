@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
 import 'package:freecodecampcourse/services/crud/notes_service.dart';
-import '../constants/routes.dart';
-import '../enums/menu_action.dart';
+import '../../constants/routes.dart';
+import '../../enums/menu_action.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -34,6 +34,11 @@ class _NotesViewState extends State<NotesView> {
       appBar: AppBar(
         title: const Text('Main UI'),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(newNoteRoute);
+              },
+              icon: const Icon(Icons.add)),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               switch (value) {
@@ -67,18 +72,18 @@ class _NotesViewState extends State<NotesView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               // return const Text('Hello....');
-            // StreamBuilder listen changes in stream
-            return StreamBuilder(
-              stream: _noteService.allNotes,
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return const Text('Your notes will appear here....');
-                  default:
-                    return const CircularProgressIndicator();
-                }
-              },
-            );
+              // StreamBuilder listen changes in stream
+              return StreamBuilder(
+                stream: _noteService.allNotes,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Text('Your notes will appear here....');
+                    default:
+                      return const CircularProgressIndicator();
+                  }
+                },
+              );
             default:
               return const CircularProgressIndicator();
           }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/screens/login_view.dart';
-import 'package:freecodecampcourse/screens/notes_view.dart';
+import 'package:freecodecampcourse/screens/notes/new_note_view.dart';
+import 'package:freecodecampcourse/screens/notes/notes_view.dart';
 import 'package:freecodecampcourse/screens/register_view.dart';
 import 'package:freecodecampcourse/screens/verify_email_view.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
         loginRoute: (context) => LoginView(),
         registerRoute: (context) => RegisterView(),
         notesRoute: (context) => const NotesView(),
-        verifyEmailRoute: (context) => const EmailVerificationView()
+        verifyEmailRoute: (context) => const EmailVerificationView(),
+        newNoteRoute: (context) => NewNoteView()
       },
     );
   }
