@@ -3,7 +3,7 @@ import 'dart:developer' as devtools show log;
 import 'package:freecodecampcourse/constants/routes.dart';
 import 'package:freecodecampcourse/services/auth/auth_exceptions.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
-import 'package:freecodecampcourse/widgets/show_error_dialog.dart';
+import 'package:freecodecampcourse/widgets/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   RegisterView({super.key});

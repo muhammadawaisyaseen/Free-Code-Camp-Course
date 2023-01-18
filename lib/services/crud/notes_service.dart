@@ -10,7 +10,7 @@ import 'package:path/path.dart' show join;
 class NotesService {
   Database? _db;
 
-List<DatabaseNote> _notes = [];
+  List<DatabaseNote> _notes = [];
 
 // Making NotesService Singleton
   static final NotesService _shared = NotesService._sharedInstance();
@@ -22,7 +22,7 @@ List<DatabaseNote> _notes = [];
     );
   }
   factory NotesService() => _shared;
-  
+
 // stream Controller contains list of DatabaseNote
   late final StreamController<List<DatabaseNote>> _notesStreamController;
 
@@ -58,6 +58,7 @@ List<DatabaseNote> _notes = [];
     final db = _getDatabaseOrThrow();
     // make sure note exists
     await getNote(id: note.id);
+    print('NOTE: $note');
     //update DB
     final updatesCount = await db.update(noteTable, {
       textColumn: text,
@@ -67,8 +68,10 @@ List<DatabaseNote> _notes = [];
       throw CouldNotUpdateNote();
     } else {
       final updatedNote = await getNote(id: note.id);
+      print("NOTE: UPDATE -> $updatedNote");
       _notes.removeWhere((note) => note.id == updatedNote.id);
       _notes.add(updatedNote);
+      print("NOTE: _NOTE -> $_notes");
       _notesStreamController.add(_notes);
       return updatedNote;
     }
@@ -134,6 +137,7 @@ List<DatabaseNote> _notes = [];
   Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
+    print("DB: $db");
     //make sure the owner exist in database with correct id
     final dbUser = await getUser(email: owner.email);
     if (dbUser != owner) {
@@ -150,6 +154,7 @@ List<DatabaseNote> _notes = [];
         isSyncedWithCloudColumn: 1,
       },
     );
+    print('NOTE: NOTEID -> $noteId');
 
     final note = DatabaseNote(
       id: noteId,
@@ -157,6 +162,7 @@ List<DatabaseNote> _notes = [];
       text: text,
       isSyncedWithCloud: true,
     );
+    print('NOTE: -> $note');
 
     _notes.add(note);
     _notesStreamController.add(_notes);
@@ -316,8 +322,7 @@ class DatabaseNote {
       'Note, Id=$id,userId=$userId, isSyncedWithCloud= $isSyncedWithCloud, text =$text';
 
   @override
-  bool operator ==(covariant DatabaseNote other) =>
-      id == other.id; // To check equality
+  bool operator ==(covariant DatabaseNote other) => id == other.id;
   @override
   int get hashCode => id.hashCode;
 }
