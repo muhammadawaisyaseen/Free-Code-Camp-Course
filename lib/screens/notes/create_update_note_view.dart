@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
 import 'package:freecodecampcourse/services/crud/notes_service.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:freecodecampcourse/widgets/generics/get_argument.dart';
+// import 'package:sqflite/sqflite.dart';
 
-class NewNoteView extends StatefulWidget {
-  const NewNoteView({super.key});
+class CreateUpdateNoteView extends StatefulWidget {
+  const CreateUpdateNoteView({super.key});
 
   @override
-  State<NewNoteView> createState() => _NewNoteViewState();
+  State<CreateUpdateNoteView> createState() => _CreateUpdateNoteViewState();
 }
 
-class _NewNoteViewState extends State<NewNoteView> {
+class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
 // when build function called again again then our note recreate again and again that is not good,
 //We have to keep the record of note creation and make sure should create only one time.
   DatabaseNote? _note;
@@ -44,8 +45,16 @@ class _NewNoteViewState extends State<NewNoteView> {
     _textController.addListener(_textControllerListener);
   }
 
-  Future<DatabaseNote> createNewNote() async {
-    print("CREATE NEW NOTE FUNCTION");
+  Future<DatabaseNote> createOrGetExistingNote(BuildContext context) async {
+    print("CREATE OR GET EXISTING NOTE FUNCTION");
+
+    final widgetNote = context.getArgument<DatabaseNote>();
+    if (widgetNote != null) {
+      _note = widgetNote;
+      _textController.text = widgetNote.text;
+      return widgetNote;
+    }
+
     final existingNote = _note;
     if (existingNote != null) {
       return existingNote;
@@ -54,7 +63,9 @@ class _NewNoteViewState extends State<NewNoteView> {
     final currentUser = AuthService.firebase().currentUser!;
     final email = currentUser.email!;
     final owner = await _noteService.getUser(email: email);
-    return await _noteService.createNote(owner: owner);
+    final newNote = await _noteService.createNote(owner: owner);
+    _note = newNote;
+    return newNote;
   }
 
   void _deleteNoteIfTextIsEmpty() {
@@ -92,11 +103,10 @@ class _NewNoteViewState extends State<NewNoteView> {
           title: const Text('New Note'),
         ),
         body: FutureBuilder(
-          future: createNewNote(),
+          future: createOrGetExistingNote(context),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
-                _note = snapshot.data as DatabaseNote;
                 _setupTextControllerListener();
                 return TextField(
                   controller: _textController,
