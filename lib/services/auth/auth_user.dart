@@ -5,13 +5,19 @@ import 'package:flutter/cupertino.dart';
 // Purpose of AuthUser --> Email is verified or not
 @immutable
 class AuthUser {
-  final String? email;
+  final String id;
+  final String email;
   final bool isEmailVerified;
-  const AuthUser(this.email, this.isEmailVerified);
+  const AuthUser(
+    this.id,
+    this.email,
+    this.isEmailVerified,
+  );
 
 // Factory constructors might return an instance that already exists, or a sub-class.
   factory AuthUser.fromFirebase(User user) => AuthUser(
-        user.email,
+        user.uid,
+        user.email!,
         user.emailVerified,
       );
 }
