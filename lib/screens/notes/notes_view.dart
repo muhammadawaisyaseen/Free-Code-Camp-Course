@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/screens/notes/notes_list_view.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
+import 'package:freecodecampcourse/services/cloud/cloud_note.dart';
+import 'package:freecodecampcourse/services/cloud/firebase_cloud_storage.dart';
 import 'package:freecodecampcourse/services/crud/notes_service.dart';
 import 'package:freecodecampcourse/widgets/dialogs/logout_dialog.dart';
 import '../../constants/routes.dart';
@@ -15,12 +17,13 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  late final NotesService _noteService;
-  String get userEmail => AuthService.firebase().currentUser!.email;
+  late final FirebaseCloudStorage _noteService;
+  String get userId => AuthService.firebase().currentUser!.id;
 
   @override
   void initState() {
-    _noteService = NotesService();
+    // Here we are getting the singleton instance of FirebaseCloudStorage not creating new instance
+    _noteService = FirebaseCloudStorage();
     super.initState();
   }
 
@@ -61,39 +64,28 @@ class _NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      body: FutureBuilder(
-        future: _noteService.getOrCreateUser(email: userEmail),
+      body: StreamBuilder(
+        stream: _noteService.allNotes(ownerUserId: userId),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              // StreamBuilder listen changes in stream
-              return StreamBuilder(
-                stream: _noteService.allNotes,
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                    case ConnectionState.active:
-                      if (snapshot.hasData) {
-                        final allNotes = snapshot.data as List<DatabaseNote>;
-                        print(allNotes);
-                        return NotesListView(
-                          notes: allNotes,
-                          onDeleteNote: (note) async {
-                            _noteService.deleteNote(id: note.id);
-                          },
-                          onTap: (note) {
-                            Navigator.of(context)
-                                .pushNamed(createOrUpdateNoteRoute,arguments: note);
-                          },
-                        );
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    default:
-                      return const CircularProgressIndicator();
-                  }
-                },
-              );
+            case ConnectionState.waiting:
+            case ConnectionState.active:
+              if (snapshot.hasData) {
+                final allNotes = snapshot.data as Iterable<CloudNote>;
+                print(allNotes);
+                return NotesListView(
+                  notes: allNotes,
+                  onDeleteNote: (note) async {
+                    _noteService.deleteNote(documentId: note.documentId);
+                  },
+                  onTap: (note) {
+                    Navigator.of(context)
+                        .pushNamed(createOrUpdateNoteRoute, arguments: note);
+                  },
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
             default:
               return const CircularProgressIndicator();
           }

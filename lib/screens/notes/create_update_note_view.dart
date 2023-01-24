@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
-import 'package:freecodecampcourse/services/crud/notes_service.dart';
+import 'package:freecodecampcourse/services/cloud/cloud_note.dart';
 import 'package:freecodecampcourse/widgets/generics/get_argument.dart';
-// import 'package:sqflite/sqflite.dart';
+import 'package:freecodecampcourse/services/cloud/firebase_cloud_storage.dart';
+import 'package:freecodecampcourse/services/cloud/cloud_storage_exception.dart';
+import 'package:freecodecampcourse/services/cloud/cloud_storage_exception.dart';
+import 'package:path/path.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({super.key});
@@ -14,14 +17,14 @@ class CreateUpdateNoteView extends StatefulWidget {
 class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
 // when build function called again again then our note recreate again and again that is not good,
 //We have to keep the record of note creation and make sure should create only one time.
-  DatabaseNote? _note;
-  late final NotesService _noteService;
+  CloudNote? _note;
+  late final FirebaseCloudStorage _noteService;
   late final TextEditingController _textController;
 
   @override
   void initState() {
-    // we need to insur that we are creating instance of NotesService & TextEditingController.
-    _noteService = NotesService();
+    // Here we are getting the singleton instance of FirebaseCloudStorage not creating new instance
+    _noteService = FirebaseCloudStorage();
     _textController = TextEditingController();
     super.initState();
   }
@@ -34,7 +37,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     }
     final text = _textController.text;
     await _noteService.updateNote(
-      note: note,
+      documentId: note.documentId,
       text: text,
     );
   }
@@ -45,10 +48,10 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     _textController.addListener(_textControllerListener);
   }
 
-  Future<DatabaseNote> createOrGetExistingNote(BuildContext context) async {
+  Future<CloudNote> createOrGetExistingNote(BuildContext context) async {
     print("CREATE OR GET EXISTING NOTE FUNCTION");
 
-    final widgetNote = context.getArgument<DatabaseNote>();
+    final widgetNote = context.getArgument<CloudNote>();
     if (widgetNote != null) {
       _note = widgetNote;
       _textController.text = widgetNote.text;
@@ -61,9 +64,8 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     }
     //!means we're expecting currUser
     final currentUser = AuthService.firebase().currentUser!;
-    final email = currentUser.email;
-    final owner = await _noteService.getUser(email: email);
-    final newNote = await _noteService.createNote(owner: owner);
+    final userId = currentUser.id;
+    final newNote = await _noteService.createNewNote(ownerUserId: userId);
     _note = newNote;
     return newNote;
   }
@@ -71,7 +73,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   void _deleteNoteIfTextIsEmpty() {
     final note = _note;
     if (_textController.text.isEmpty && note != null) {
-      _noteService.deleteNote(id: note.id);
+      _noteService.deleteNote(documentId: note.documentId);
     }
   }
 
@@ -79,10 +81,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     final note = _note;
     final text = _textController.text;
     if (note != null && text.isNotEmpty) {
-      _noteService.updateNote(
-        note: note,
-        text: text,
-      );
+      _noteService.updateNote(documentId: note.documentId, text: text);
     }
   }
 
