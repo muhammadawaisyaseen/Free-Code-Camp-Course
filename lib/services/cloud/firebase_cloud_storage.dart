@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:freecodecampcourse/services/cloud/cloud_note.dart';
 import 'package:freecodecampcourse/services/cloud/cloud_storage_constants.dart';
 import 'package:freecodecampcourse/services/cloud/cloud_storage_exception.dart';
-import 'package:freecodecampcourse/services/crud/crud_exceptions.dart';
 
 class FirebaseCloudStorage {
   // Making FirebaseCloudStorage Singleton

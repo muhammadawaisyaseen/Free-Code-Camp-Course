@@ -4,7 +4,6 @@ import 'package:freecodecampcourse/screens/notes/notes_list_view.dart';
 import 'package:freecodecampcourse/services/auth/auth_service.dart';
 import 'package:freecodecampcourse/services/cloud/cloud_note.dart';
 import 'package:freecodecampcourse/services/cloud/firebase_cloud_storage.dart';
-import 'package:freecodecampcourse/services/crud/notes_service.dart';
 import 'package:freecodecampcourse/widgets/dialogs/logout_dialog.dart';
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
@@ -72,7 +71,7 @@ class _NotesViewState extends State<NotesView> {
             case ConnectionState.active:
               if (snapshot.hasData) {
                 final allNotes = snapshot.data as Iterable<CloudNote>;
-                print(allNotes);
+                // print(allNotes);
                 return NotesListView(
                   notes: allNotes,
                   onDeleteNote: (note) async {
