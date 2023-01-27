@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter/cupertino.dart';
 
-// Purpose of AuthUser --> Email is verified or not
+// Purpose of AuthUser --> Email is verified or not and (id,email)
 @immutable
 class AuthUser {
   final String id;
