@@ -7,7 +7,7 @@ import 'package:freecodecampcourse/screens/notes/create_update_note_view.dart';
 import 'package:freecodecampcourse/screens/notes/notes_view.dart';
 import 'package:freecodecampcourse/screens/register_view.dart';
 import 'package:freecodecampcourse/screens/verify_email_view.dart';
-import 'package:freecodecampcourse/services/auth/auth_service.dart';
+// import 'package:freecodecampcourse/services/auth/auth_service.dart';
 import 'package:freecodecampcourse/services/auth/bloc/auth_bloc.dart';
 import 'package:freecodecampcourse/services/auth/bloc/auth_event.dart';
 import 'package:freecodecampcourse/services/auth/bloc/auth_state.dart';
@@ -61,8 +61,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //First we have to initilize the Bloc and add() is a way to
-    //communicate with Bloc about various Events that you are sending
+    //Read Bloc and convey an event to it
+    //add() is a way to communicate with Bloc about various Events that you are sending
     context.read<AuthBloc>().add(const AuthEventInitialize());
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
