@@ -8,8 +8,17 @@ abstract class AuthState {
   const AuthState();
 }
 
-class AuthStateLoading extends AuthState {
-  const AuthStateLoading();
+// class AuthStateLoading extends AuthState {
+//   const AuthStateLoading();
+// }
+
+class AuthStateInitialized extends AuthState {
+  const AuthStateInitialized();
+}
+
+class AuthStateRegistering extends AuthState {
+  final Exception exception;
+  const AuthStateRegistering(this.exception);
 }
 
 class AuthStateLoggedIn extends AuthState {
@@ -17,21 +26,21 @@ class AuthStateLoggedIn extends AuthState {
   const AuthStateLoggedIn(this.user);
 }
 
-// class AuthStateLoginFailure extends AuthState {
-//   final Exception exception;
-//   const AuthStateLoginFailure(this.exception);
-// }
-
 class AuthStateNeedsVerification extends AuthState {
   const AuthStateNeedsVerification();
 }
 
+// here we are handling three states in the same class, we can also make different 3 States
 class AuthStateLoggedOut extends AuthState {
   final Exception? exception;
-  const AuthStateLoggedOut(this.exception);
+  final bool isLoading;
+  const AuthStateLoggedOut({
+    required this.exception,
+    required this.isLoading,
+});
 }
 
-class AuthStateLogOutFailure extends AuthState {
-  final Exception exception;
-  const AuthStateLogOutFailure(this.exception);
-}
+// class AuthStateLogOutFailure extends AuthState {
+//   final Exception exception;
+//   const AuthStateLogOutFailure(this.exception);
+// }
