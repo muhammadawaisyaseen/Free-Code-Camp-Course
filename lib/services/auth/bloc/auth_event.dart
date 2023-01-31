@@ -9,7 +9,7 @@ class AuthEventInitialize extends AuthEvent {
   const AuthEventInitialize();
 }
 
-class AuthEventSendEmailVerification {
+class AuthEventSendEmailVerification extends AuthEvent{
   const AuthEventSendEmailVerification();
 }
 
