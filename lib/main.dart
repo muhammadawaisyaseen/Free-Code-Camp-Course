@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freecodecampcourse/helpers/loading/loading_screen.dart';
+import 'package:freecodecampcourse/screens/forgot_password_view.dart';
 import 'package:freecodecampcourse/screens/login_view.dart';
 import 'package:freecodecampcourse/screens/notes/create_update_note_view.dart';
 import 'package:freecodecampcourse/screens/notes/notes_view.dart';
@@ -60,7 +62,17 @@ class _HomePageState extends State<HomePage> {
     //Read Bloc and convey an event to it
     //add() is a way to communicate with Bloc about various Events that you are sending
     context.read<AuthBloc>().add(const AuthEventInitialize());
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+            context: context,
+            text: state.loadingText ?? 'Please wait a moment',
+          );
+        } else {
+          LoadingScreen().hide();
+        }
+      },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
           return const NotesView();
@@ -68,10 +80,15 @@ class _HomePageState extends State<HomePage> {
           return const EmailVerificationView();
         } else if (state is AuthStateLoggedOut) {
           return LoginView();
+        } else if (state is AuthStateForgotPassword) {
+          return const ForgotPasswordView();
         } else if (State is AuthStateRegistering) {
           return RegisterView();
         } else {
           return const Scaffold(
+            // appBar: AppBar(
+            //   title: const Text('Awais'),
+            // ),
             body: CircularProgressIndicator(),
           );
         }
