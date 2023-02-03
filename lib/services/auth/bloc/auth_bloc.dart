@@ -9,7 +9,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider)
       : super(const AuthStateUninitialized(isLoading: true)) {
     // In AuthBlock we actually handle various events and then based on those events produe a state
-//Forgot Password
+
+//Auth Event Should Register
+    on<AuthEventShouldRegister>((event, emit) {
+      emit(const AuthStateRegistering(
+        exception: null,
+        isLoading: false,
+      ));
+    });
+
+    //Forgot Password
     on<AuthEventForgotPassword>((event, emit) async {
       emit(const AuthStateForgotPassword(
         exception: null,
@@ -43,7 +52,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         exception: exception,
         hasSentEmail: didSendEmail,
         isLoading: false,
-      )); 
+      ));
     });
 
 //send email verification
