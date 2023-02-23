@@ -63,8 +63,9 @@ class _HomePageState extends State<HomePage> {
     //add() is a way to communicate with Bloc about various Events that you are sending
     context.read<AuthBloc>().add(const AuthEventInitialize());
     return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.isLoading) {
+          await Text('malik sahib');
           LoadingScreen().show(
             context: context,
             text: state.loadingText ?? 'Please wait a moment',
@@ -85,10 +86,10 @@ class _HomePageState extends State<HomePage> {
         } else if (State is AuthStateRegistering) {
           return RegisterView();
         } else {
-          return const Scaffold(
-            // appBar: AppBar(
-            //   title: const Text('Awais'),
-            // ),
+          return  Scaffold(
+            appBar: AppBar(
+              title: const Text('Awais'),
+            ),
             body: CircularProgressIndicator(),
           );
         }

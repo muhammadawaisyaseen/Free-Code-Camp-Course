@@ -78,7 +78,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
     //Initialize Event
-    on<AuthEventInitialize>((_, emit) async {
+    on<AuthEventInitialize>((event, emit) async {
       await provider.initialize();
       final user = provider.currentUser;
       if (user == null) {
@@ -142,7 +142,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     //LogOut Event
-    on<AuthEventLogOut>((_, emit) async {
+    on<AuthEventLogOut>((event, emit) async {
       try {
         provider.logOut();
         emit(const AuthStateLoggedOut(exception: null, isLoading: false));
